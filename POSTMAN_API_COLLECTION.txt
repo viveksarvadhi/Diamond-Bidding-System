@@ -1,0 +1,956 @@
+===============================================================================
+DIAMOND BIDDING SYSTEM - COMPLETE API COLLECTION FOR POSTMAN TESTING
+===============================================================================
+
+BASE URL: http://localhost:5000/api
+AUTHENTICATION: Bearer Token (JWT)
+
+Login Credentials:
+- Admin: admin@diamondbidding.com / admin123
+- User: john@example.com / user123
+
+===============================================================================
+1. AUTHENTICATION APIS
+===============================================================================
+
+--- USER REGISTRATION ---
+POST /auth/register
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "email": "test@example.com",
+  "password": "password123",
+  "role": "USER"
+}
+
+Expected Response:
+{
+  "success": true,
+  "message": "User registered successfully",
+  "data": {
+    "user": {
+      "id": 1,
+      "name": "Test User",
+      "email": "test@example.com",
+      "role": "USER",
+      "isActive": true,
+      "createdAt": "2024-01-29T10:00:00.000Z",
+      "updatedAt": "2024-01-29T10:00:00.000Z"
+    },
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+}
+
+--- ADMIN LOGIN ---
+POST /auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@diamondbidding.com",
+  "password": "admin123"
+}
+
+Expected Response:
+{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "user": {
+      "id": 1,
+      "name": "Admin User",
+      "email": "admin@diamondbidding.com",
+      "role": "ADMIN",
+      "isActive": true,
+      "createdAt": "2024-01-29T10:00:00.000Z",
+      "updatedAt": "2024-01-29T10:00:00.000Z"
+    },
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+}
+
+--- USER LOGIN ---
+POST /auth/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "user123"
+}
+
+Expected Response:
+{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "user": {
+      "id": 2,
+      "name": "John Doe",
+      "email": "john@example.com",
+      "role": "USER",
+      "isActive": true,
+      "createdAt": "2024-01-29T10:00:00.000Z",
+      "updatedAt": "2024-01-29T10:00:00.000Z"
+    },
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+}
+
+--- GET USER PROFILE ---
+GET /auth/profile
+Authorization: Bearer {admin_token}
+
+Expected Response:
+{
+  "success": true,
+  "data": {
+    "user": {
+      "id": 1,
+      "name": "Admin User",
+      "email": "admin@diamondbidding.com",
+      "role": "ADMIN",
+      "isActive": true,
+      "createdAt": "2024-01-29T10:00:00.000Z",
+      "updatedAt": "2024-01-29T10:00:00.000Z"
+    }
+  }
+}
+
+--- USER LOGOUT ---
+POST /auth/logout
+Authorization: Bearer {user_token}
+
+Expected Response:
+{
+  "success": true,
+  "message": "Logout successful"
+}
+
+--- VALIDATE TOKEN ---
+GET /auth/validate
+Authorization: Bearer {token}
+
+Expected Response:
+{
+  "success": true,
+  "data": {
+    "user": {
+      "id": 1,
+      "name": "Admin User",
+      "email": "admin@diamondbidding.com",
+      "role": "ADMIN",
+      "isActive": true,
+      "createdAt": "2024-01-29T10:00:00.000Z",
+      "updatedAt": "2024-01-29T10:00:00.000Z"
+    }
+  }
+}
+
+===============================================================================
+2. USER MANAGEMENT APIS (ADMIN ONLY)
+===============================================================================
+
+--- GET ALL USERS ---
+GET /users
+Authorization: Bearer {admin_token}
+
+Expected Response:
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "name": "Admin User",
+      "email": "admin@diamondbidding.com",
+      "role": "ADMIN",
+      "isActive": true,
+      "createdAt": "2024-01-29T10:00:00.000Z",
+      "updatedAt": "2024-01-29T10:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "name": "John Doe",
+      "email": "john@example.com",
+      "role": "USER",
+      "isActive": true,
+      "createdAt": "2024-01-29T10:00:00.000Z",
+      "updatedAt": "2024-01-29T10:00:00.000Z"
+    }
+  ]
+}
+
+--- GET USER BY ID ---
+GET /users/2
+Authorization: Bearer {admin_token}
+
+Expected Response:
+{
+  "success": true,
+  "data": {
+    "id": 2,
+    "name": "John Doe",
+    "email": "john@example.com",
+    "role": "USER",
+    "isActive": true,
+    "createdAt": "2024-01-29T10:00:00.000Z",
+    "updatedAt": "2024-01-29T10:00:00.000Z"
+  }
+}
+
+--- CREATE NEW USER ---
+POST /users
+Authorization: Bearer {admin_token}
+Content-Type: application/json
+
+{
+  "name": "Jane Smith",
+  "email": "jane@example.com",
+  "password": "password123",
+  "role": "USER"
+}
+
+Expected Response:
+{
+  "success": true,
+  "message": "User created successfully",
+  "data": {
+    "id": 3,
+    "name": "Jane Smith",
+    "email": "jane@example.com",
+    "role": "USER",
+    "isActive": true,
+    "createdAt": "2024-01-29T10:00:00.000Z",
+    "updatedAt": "2024-01-29T10:00:00.000Z"
+  }
+}
+
+--- UPDATE USER ---
+PUT /users/3
+Authorization: Bearer {admin_token}
+Content-Type: application/json
+
+{
+  "name": "Jane Updated",
+  "email": "jane.updated@example.com"
+}
+
+Expected Response:
+{
+  "success": true,
+  "message": "User updated successfully",
+  "data": {
+    "id": 3,
+    "name": "Jane Updated",
+    "email": "jane.updated@example.com",
+    "role": "USER",
+    "isActive": true,
+    "createdAt": "2024-01-29T10:00:00.000Z",
+    "updatedAt": "2024-01-29T10:05:00.000Z"
+  }
+}
+
+--- TOGGLE USER STATUS ---
+PATCH /users/3/toggle-status
+Authorization: Bearer {admin_token}
+
+Expected Response:
+{
+  "success": true,
+  "message": "User status updated successfully",
+  "data": {
+    "id": 3,
+    "name": "Jane Updated",
+    "email": "jane.updated@example.com",
+    "role": "USER",
+    "isActive": false,
+    "createdAt": "2024-01-29T10:00:00.000Z",
+    "updatedAt": "2024-01-29T10:10:00.000Z"
+  }
+}
+
+--- DELETE USER ---
+DELETE /users/3
+Authorization: Bearer {admin_token}
+
+Expected Response:
+{
+  "success": true,
+  "message": "User deleted successfully"
+}
+
+===============================================================================
+3. DIAMOND MANAGEMENT APIS
+===============================================================================
+
+--- GET ALL DIAMONDS (PUBLIC) ---
+GET /diamonds
+
+Expected Response:
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "name": "Royal Blue Diamond",
+      "basePrice": 50000,
+      "description": "Beautiful royal blue diamond",
+      "image_url": "https://example.com/blue-diamond.jpg",
+      "createdAt": "2024-01-29T10:00:00.000Z",
+      "updatedAt": "2024-01-29T10:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "name": "Pink Diamond",
+      "basePrice": 75000,
+      "description": "Stunning pink diamond",
+      "image_url": "https://example.com/pink-diamond.jpg",
+      "createdAt": "2024-01-29T10:00:00.000Z",
+      "updatedAt": "2024-01-29T10:00:00.000Z"
+    }
+  ]
+}
+
+--- GET DIAMOND BY ID (PUBLIC) ---
+GET /diamonds/1
+
+Expected Response:
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "name": "Royal Blue Diamond",
+    "basePrice": 50000,
+    "description": "Beautiful royal blue diamond",
+    "image_url": "https://example.com/blue-diamond.jpg",
+    "createdAt": "2024-01-29T10:00:00.000Z",
+    "updatedAt": "2024-01-29T10:00:00.000Z"
+  }
+}
+
+--- CREATE DIAMOND (ADMIN ONLY) ---
+POST /diamonds
+Authorization: Bearer {admin_token}
+Content-Type: application/json
+
+{
+  "name": "Emerald Diamond",
+  "basePrice": 60000,
+  "description": "Gorgeous emerald green diamond",
+  "image_url": "https://example.com/emerald-diamond.jpg"
+}
+
+Expected Response:
+{
+  "success": true,
+  "message": "Diamond created successfully",
+  "data": {
+    "id": 3,
+    "name": "Emerald Diamond",
+    "basePrice": 60000,
+    "description": "Gorgeous emerald green diamond",
+    "image_url": "https://example.com/emerald-diamond.jpg",
+    "createdAt": "2024-01-29T10:15:00.000Z",
+    "updatedAt": "2024-01-29T10:15:00.000Z"
+  }
+}
+
+--- UPDATE DIAMOND (ADMIN ONLY) ---
+PUT /diamonds/3
+Authorization: Bearer {admin_token}
+Content-Type: application/json
+
+{
+  "name": "Emerald Diamond Updated",
+  "basePrice": 65000,
+  "description": "Updated emerald green diamond description"
+}
+
+Expected Response:
+{
+  "success": true,
+  "message": "Diamond updated successfully",
+  "data": {
+    "id": 3,
+    "name": "Emerald Diamond Updated",
+    "basePrice": 65000,
+    "description": "Updated emerald green diamond description",
+    "image_url": "https://example.com/emerald-diamond.jpg",
+    "createdAt": "2024-01-29T10:15:00.000Z",
+    "updatedAt": "2024-01-29T10:20:00.000Z"
+  }
+}
+
+--- DELETE DIAMOND (ADMIN ONLY) ---
+DELETE /diamonds/3
+Authorization: Bearer {admin_token}
+
+Expected Response:
+{
+  "success": true,
+  "message": "Diamond deleted successfully"
+}
+
+--- GET DIAMOND STATISTICS (ADMIN ONLY) ---
+GET /diamonds/1/stats
+Authorization: Bearer {admin_token}
+
+Expected Response:
+{
+  "success": true,
+  "data": {
+    "diamond": {
+      "id": 1,
+      "name": "Royal Blue Diamond",
+      "basePrice": 50000
+    },
+    "totalAuctions": 3,
+    "totalBids": 15,
+    "averageBidAmount": 55000
+  }
+}
+
+===============================================================================
+4. BID (AUCTION) MANAGEMENT APIS
+===============================================================================
+
+--- GET ALL BIDS (ADMIN ONLY) ---
+GET /bids
+Authorization: Bearer {admin_token}
+
+Expected Response:
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "diamondId": 1,
+      "baseBidPrice": 50000,
+      "startTime": "2024-01-29T10:00:00.000Z",
+      "endTime": "2024-01-30T10:00:00.000Z",
+      "status": "ACTIVE",
+      "resultDeclared": false,
+      "createdAt": "2024-01-29T09:30:00.000Z",
+      "updatedAt": "2024-01-29T10:00:00.000Z"
+    }
+  ]
+}
+
+--- GET ACTIVE BIDS (PUBLIC) ---
+GET /bids/active
+
+Expected Response:
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "diamondId": 1,
+      "baseBidPrice": 50000,
+      "startTime": "2024-01-29T10:00:00.000Z",
+      "endTime": "2024-01-30T10:00:00.000Z",
+      "status": "ACTIVE",
+      "resultDeclared": false,
+      "diamond": {
+        "id": 1,
+        "name": "Royal Blue Diamond",
+        "basePrice": 50000
+      }
+    }
+  ]
+}
+
+--- GET BID BY ID (ADMIN ONLY) ---
+GET /bids/1
+Authorization: Bearer {admin_token}
+
+Expected Response:
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "diamondId": 1,
+    "baseBidPrice": 50000,
+    "startTime": "2024-01-29T10:00:00.000Z",
+    "endTime": "2024-01-30T10:00:00.000Z",
+    "status": "ACTIVE",
+    "resultDeclared": false,
+    "createdAt": "2024-01-29T09:30:00.000Z",
+    "updatedAt": "2024-01-29T10:00:00.000Z"
+  }
+}
+
+--- CREATE BID (ADMIN ONLY) ---
+POST /bids
+Authorization: Bearer {admin_token}
+Content-Type: application/json
+
+{
+  "diamondId": 2,
+  "baseBidPrice": 75000,
+  "startTime": "2024-01-29T14:00:00.000Z",
+  "endTime": "2024-01-30T14:00:00.000Z"
+}
+
+Expected Response:
+{
+  "success": true,
+  "message": "Bid created successfully",
+  "data": {
+    "id": 2,
+    "diamondId": 2,
+    "baseBidPrice": 75000,
+    "startTime": "2024-01-29T14:00:00.000Z",
+    "endTime": "2024-01-30T14:00:00.000Z",
+    "status": "DRAFT",
+    "resultDeclared": false,
+    "createdAt": "2024-01-29T13:30:00.000Z",
+    "updatedAt": "2024-01-29T13:30:00.000Z"
+  }
+}
+
+--- UPDATE BID (ADMIN ONLY) ---
+PUT /bids/2
+Authorization: Bearer {admin_token}
+Content-Type: application/json
+
+{
+  "baseBidPrice": 80000,
+  "startTime": "2024-01-29T15:00:00.000Z",
+  "endTime": "2024-01-30T15:00:00.000Z"
+}
+
+Expected Response:
+{
+  "success": true,
+  "message": "Bid updated successfully",
+  "data": {
+    "id": 2,
+    "diamondId": 2,
+    "baseBidPrice": 80000,
+    "startTime": "2024-01-29T15:00:00.000Z",
+    "endTime": "2024-01-30T15:00:00.000Z",
+    "status": "DRAFT",
+    "resultDeclared": false,
+    "createdAt": "2024-01-29T13:30:00.000Z",
+    "updatedAt": "2024-01-29T13:45:00.000Z"
+  }
+}
+
+--- ACTIVATE BID (ADMIN ONLY) ---
+PATCH /bids/2/activate
+Authorization: Bearer {admin_token}
+
+Expected Response:
+{
+  "success": true,
+  "message": "Bid activated successfully",
+  "data": {
+    "id": 2,
+    "diamondId": 2,
+    "baseBidPrice": 80000,
+    "startTime": "2024-01-29T15:00:00.000Z",
+    "endTime": "2024-01-30T15:00:00.000Z",
+    "status": "ACTIVE",
+    "resultDeclared": false,
+    "createdAt": "2024-01-29T13:30:00.000Z",
+    "updatedAt": "2024-01-29T13:50:00.000Z"
+  }
+}
+
+--- DELETE BID (ADMIN ONLY) ---
+DELETE /bids/2
+Authorization: Bearer {admin_token}
+
+Expected Response:
+{
+  "success": true,
+  "message": "Bid deleted successfully"
+}
+
+--- GET BID STATISTICS (ADMIN ONLY) ---
+GET /bids/1/stats
+Authorization: Bearer {admin_token}
+
+Expected Response:
+{
+  "success": true,
+  "data": {
+    "bid": {
+      "id": 1,
+      "baseBidPrice": 50000,
+      "startTime": "2024-01-29T10:00:00.000Z",
+      "endTime": "2024-01-30T10:00:00.000Z",
+      "status": "ACTIVE"
+    },
+    "totalUserBids": 8,
+    "highestBid": 58000,
+    "lowestBid": 50000,
+    "averageBid": 54000
+  }
+}
+
+===============================================================================
+5. USER BIDDING APIS
+===============================================================================
+
+--- GET USER'S BIDS ---
+GET /user-bids/my-bids
+Authorization: Bearer {user_token}
+
+Expected Response:
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "userId": 2,
+      "bidId": 1,
+      "amount": 52000,
+      "createdAt": "2024-01-29T11:00:00.000Z",
+      "updatedAt": "2024-01-29T11:00:00.000Z",
+      "bid": {
+        "id": 1,
+        "diamond": {
+          "name": "Royal Blue Diamond",
+          "basePrice": 50000
+        },
+        "endTime": "2024-01-30T10:00:00.000Z"
+      }
+    }
+  ]
+}
+
+--- GET BID HISTORY ---
+GET /user-bids/1/history
+Authorization: Bearer {user_token}
+
+Expected Response:
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "userBidId": 1,
+      "oldAmount": 50000,
+      "newAmount": 52000,
+      "createdAt": "2024-01-29T11:30:00.000Z"
+    }
+  ]
+}
+
+--- PLACE NEW BID ---
+POST /user-bids
+Authorization: Bearer {user_token}
+Content-Type: application/json
+
+{
+  "bidId": 1,
+  "amount": 55000
+}
+
+Expected Response:
+{
+  "success": true,
+  "message": "Bid placed successfully",
+  "data": {
+    "id": 2,
+    "userId": 2,
+    "bidId": 1,
+    "amount": 55000,
+    "createdAt": "2024-01-29T12:00:00.000Z",
+    "updatedAt": "2024-01-29T12:00:00.000Z"
+  }
+}
+
+--- EDIT EXISTING BID ---
+PUT /user-bids/2
+Authorization: Bearer {user_token}
+Content-Type: application/json
+
+{
+  "amount": 60000
+}
+
+Expected Response:
+{
+  "success": true,
+  "message": "Bid updated successfully",
+  "data": {
+    "id": 2,
+    "userId": 2,
+    "bidId": 1,
+    "amount": 60000,
+    "createdAt": "2024-01-29T12:00:00.000Z",
+    "updatedAt": "2024-01-29T12:15:00.000Z"
+  }
+}
+
+--- DELETE USER BID ---
+DELETE /user-bids/2
+Authorization: Bearer {user_token}
+
+Expected Response:
+{
+  "success": true,
+  "message": "Bid deleted successfully"
+}
+
+--- GET HIGHEST BID FOR AUCTION ---
+GET /user-bids/bid/1/highest
+
+Expected Response:
+{
+  "success": true,
+  "data": {
+    "highestBid": 58000,
+    "user": {
+      "name": "Bob Johnson",
+      "email": "bob@example.com"
+    }
+  }
+}
+
+--- GET ALL BIDS FOR AUCTION (ADMIN ONLY) ---
+GET /user-bids/bid/1/all
+Authorization: Bearer {admin_token}
+
+Expected Response:
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "userId": 2,
+      "bidId": 1,
+      "amount": 52000,
+      "createdAt": "2024-01-29T11:00:00.000Z",
+      "updatedAt": "2024-01-29T11:00:00.000Z",
+      "user": {
+        "id": 2,
+        "name": "John Doe",
+        "email": "john@example.com"
+      }
+    },
+    {
+      "id": 2,
+      "userId": 3,
+      "bidId": 1,
+      "amount": 58000,
+      "createdAt": "2024-01-29T11:30:00.000Z",
+      "updatedAt": "2024-01-29T11:30:00.000Z",
+      "user": {
+        "id": 3,
+        "name": "Bob Johnson",
+        "email": "bob@example.com"
+      }
+    }
+  ]
+}
+
+===============================================================================
+6. RESULT MANAGEMENT APIS
+===============================================================================
+
+--- GET ALL RESULTS (ADMIN ONLY) ---
+GET /results
+Authorization: Bearer {admin_token}
+
+Expected Response:
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "bidId": 1,
+      "winnerUserId": 3,
+      "winningAmount": 58000,
+      "declaredAt": "2024-01-30T10:30:00.000Z",
+      "declaredBy": 1
+    }
+  ]
+}
+
+--- GET USER'S RESULTS ---
+GET /results/my-results
+Authorization: Bearer {user_token}
+
+Expected Response:
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "bidId": 1,
+      "winnerUserId": 3,
+      "winningAmount": 58000,
+      "declaredAt": "2024-01-30T10:30:00.000Z",
+      "bid": {
+        "id": 1,
+        "diamond": {
+          "name": "Royal Blue Diamond"
+        }
+      }
+    }
+  ]
+}
+
+--- GET RESULT BY ID (PUBLIC) ---
+GET /results/1
+
+Expected Response:
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "bidId": 1,
+    "winnerUserId": 3,
+    "winningAmount": 58000,
+    "declaredAt": "2024-01-30T10:30:00.000Z",
+    "declaredBy": 1
+  }
+}
+
+--- DECLARE RESULT (ADMIN ONLY) ---
+POST /results
+Authorization: Bearer {admin_token}
+Content-Type: application/json
+
+{
+  "bidId": 1,
+  "winnerUserId": 3,
+  "winningAmount": 58000
+}
+
+Expected Response:
+{
+  "success": true,
+  "message": "Result declared successfully",
+  "data": {
+    "id": 1,
+    "bidId": 1,
+    "winnerUserId": 3,
+    "winningAmount": 58000,
+    "declaredAt": "2024-01-30T10:30:00.000Z",
+    "declaredBy": 1
+  }
+}
+
+--- DELETE RESULT (ADMIN ONLY) ---
+DELETE /results/1
+Authorization: Bearer {admin_token}
+
+Expected Response:
+{
+  "success": true,
+  "message": "Result deleted successfully"
+}
+
+--- GET BID SUMMARY (ADMIN ONLY) ---
+GET /results/bid/1/summary
+Authorization: Bearer {admin_token}
+
+Expected Response:
+{
+  "success": true,
+  "data": {
+    "bid": {
+      "id": 1,
+      "baseBidPrice": 50000,
+      "startTime": "2024-01-29T10:00:00.000Z",
+      "endTime": "2024-01-30T10:00:00.000Z"
+    },
+    "totalBids": 8,
+    "winner": {
+      "name": "Bob Johnson",
+      "email": "bob@example.com"
+    },
+    "winningAmount": 58000,
+    "result": {
+      "id": 1,
+      "declaredAt": "2024-01-30T10:30:00.000Z",
+      "declaredBy": 1
+    }
+  }
+}
+
+--- GET STATISTICS OVERVIEW (ADMIN ONLY) ---
+GET /results/stats/overview
+Authorization: Bearer {admin_token}
+
+Expected Response:
+{
+  "success": true,
+  "data": {
+    "totalUsers": 5,
+    "totalDiamonds": 2,
+    "totalAuctions": 2,
+    "totalBids": 8,
+    "completedAuctions": 1,
+    "activeAuctions": 1
+  }
+}
+
+===============================================================================
+TESTING WORKFLOW SEQUENCE
+===============================================================================
+
+STEP 1: AUTHENTICATION
+1. POST /auth/login (Admin)
+2. POST /auth/login (User)
+3. Save tokens for subsequent requests
+
+STEP 2: ADMIN SETUP
+4. POST /diamonds (Create diamonds)
+5. POST /bids (Create auctions)
+6. PATCH /bids/:id/activate (Activate auctions)
+
+STEP 3: USER PARTICIPATION
+7. GET /bids/active (View active auctions)
+8. POST /user-bids (Place bids)
+9. PUT /user-bids/:id (Edit bids)
+
+STEP 4: ADMIN MONITORING
+10. GET /user-bids/bid/:id/all (Monitor all bids)
+11. GET /user-bids/bid/:id/highest (Check highest bid)
+12. POST /results (Declare winner)
+
+STEP 5: USER RESULTS
+13. GET /results/my-results (View results)
+14. GET /user-bids/my-bids (View bid history)
+
+===============================================================================
+POSTMAN IMPORT INSTRUCTIONS
+===============================================================================
+
+1. Copy this entire file content
+2. Open Postman
+3. Click "Import" > "Raw text"
+4. Paste the content
+5. Postman will automatically create the collection
+6. Set environment variables:
+   - base_url: http://localhost:5000/api
+   - admin_token: {copy from login response}
+   - user_token: {copy from login response}
+
+7. Test each API in sequence as shown in TESTING WORKFLOW
+
+===============================================================================
+ERROR HANDLING
+===============================================================================
+
+Common Error Responses:
+- 401: Unauthorized (invalid/missing token)
+- 403: Forbidden (insufficient permissions)
+- 404: Not Found (resource doesn't exist)
+- 422: Validation Error (invalid input data)
+- 500: Internal Server Error
+
+Example Error Response:
+{
+  "success": false,
+  "message": "Invalid email or password"
+}
+
+===============================================================================
+END OF API COLLECTION
+===============================================================================

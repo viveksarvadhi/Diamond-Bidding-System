@@ -1,4 +1,4 @@
-# Diamond Bidding System
+# Diamond Bidding Aution System
 
 A production-ready, real-world diamond auction platform built with Node.js, Express, React, and PostgreSQL.
 
